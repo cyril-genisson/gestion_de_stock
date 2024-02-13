@@ -9,6 +9,7 @@
 @project: 
 @licence: GPLv3
 """
+from parameters import *
 import pandas as pd
 from db import *
 
@@ -39,7 +40,7 @@ class Gestion(Db):
         req = f"INSERT INTO {table}({arg_k}) VALUES ({arg_v})"
         res = self.query(req, modif=True)
 
-    def update_t(self, table, **kwargs):
+    def update_t(self, table, id_t, **kwargs):
         argv = ""
         for key, value in kwargs.items():
             argv += f"{key}=\'{value}\', "
@@ -57,22 +58,25 @@ class Gestion(Db):
     def see_category(self):
         req = f"SELECT * FROM category"
         res = self.query(req)
-        print(res)
+        return res
+
+    def see_category_by_name(self):
+        req = f"SELECT name FROM category"
+        res = self.query(req)
         return res
 
     def see_product(self, id_cat=None):
         if id_cat:
-            req = f"SELECT product.name, description, price, quantity, category.name FROM product JOIN category WHERE product.id_category = category.id AND product.id_category = {id_cat}"
+            req = f"SELECT product.id, product.name, category.name, price, quantity, description  FROM product JOIN category WHERE product.id_category = category.id AND product.id_category = {id_cat}"
             res = self.query(req)
         else:
-            req = f"SELECT product.name, description, price, quantity, category.name FROM product JOIN category WHERE product.id_category = category.id"
+            req = f"SELECT product.id, product.name, category.name, price, quantity, description FROM product JOIN category WHERE product.id_category = category.id"
             res = self.query(req)
-        print(res)
         return res
 
     def save_csv(self, id_cat=None, filename='save.csv'):
         data = self.see_product(id_cat)
-        df = pd.DataFrame(data, columns=['Name', 'Description', 'Price', 'Quantity', 'Category'])
+        df = pd.DataFrame(data, columns=['Id', 'Name', 'Description', 'Price', 'Quantity', 'Category'])
         csv_filename = filename
         df.to_csv(csv_filename, index=False)
 

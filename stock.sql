@@ -20,10 +20,10 @@ INSERT INTO category(name) VALUES ('UNCATEGORIZED');
 CREATE TABLE product(
     id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
-    description TEXT DEFAULT '',
     price DECIMAL(6,2) DEFAULT 0.00,
     quantity INT UNSIGNED DEFAULT 0,
     id_category INT UNSIGNED DEFAULT 1,
+    description TEXT DEFAULT '',
     CONSTRAINT `fk_hook_category`
     FOREIGN KEY (id_category) REFERENCES category (id)
     ON DELETE RESTRICT
